@@ -1,21 +1,21 @@
-﻿@model IEnumerable<Tweet>
+﻿@model User
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">@Model.Fullname</h1>
 </div>
 
 @{
-    foreach (var item in Model)
+    foreach (var item in Model.Tweets)
     {
         <div class="card m-4">
             <div class="card-body">
                 <p class="card-text">@item.Text</p>
             </div>
             <div class="card-footer text-muted text-center">
-                @item.Updated - <a asp-controller="User" asp-route-id="@item.Author.Id" asp-action="Tweets" class="link-dark">@item.Author.Fullname</a>
+                @item.Updated
             </div>
         </div>
 

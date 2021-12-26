@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tweeter.Data;
 using Tweeter.Dtos;
 using Tweeter.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tweeter.Controllers;
 
@@ -67,7 +68,7 @@ public class UserController : Controller
             alert.Message = "Connected succefully";
 
             HttpContext.Session.SetString("Username", userFromDb.Username);
-            HttpContext.Session.SetString("UserId", userFromDb.Id.ToString());
+            HttpContext.Session.SetInt32("UserId", userFromDb.Id);
             HttpContext.Session.SetString("Fullname", userFromDb.Fullname);
 
             return RedirectToAction("Index", "Home");
@@ -95,5 +96,12 @@ public class UserController : Controller
     public IActionResult Register()
     {
         return View("Register", null);
+    }
+
+    public IActionResult Tweets(int id)
+    {
+        var user = _context.Users.Include(u => u.Tweets).First(u => u.Id == id);
+
+        return View(user);
     }
 }

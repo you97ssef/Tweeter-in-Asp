@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Tweet>
+@{
+    ViewData["Title"] = "New tweet";
+}
+
+<div class="text-center">
+    <h1 class="display-4">New Tweet</h1>
+</div>
+
+
+
+<form asp-action="New">
+    <div class="mb-3">
+        <label for="content" class="form-label">Username</label>
+        <textarea class="form-control" name="content" id="content" rows="10"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Post tweet</button>
+</form>

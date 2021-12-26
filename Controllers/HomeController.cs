@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Tweeter.Data;
 using Tweeter.Models;
 
@@ -19,7 +20,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        IEnumerable<Tweet>? tweets = _context.Tweets.ToList();
+        IEnumerable<Tweet>? tweets = _context.Tweets.Include(t => t.Author).ToList();
 
         return View(tweets);
     }
