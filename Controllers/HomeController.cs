@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Tweeter.Data;
 using Tweeter.Models;
 
 namespace Tweeter.Controllers;
@@ -8,19 +9,19 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
+    private readonly DataContext _context;
+
     public HomeController(ILogger<HomeController> logger)
     {
+        _context = new DataContext();
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        return View();
-    }
+        IEnumerable<Tweet>? tweets = _context.Tweets.ToList();
 
-    public IActionResult Privacy()
-    {
-        return View();
+        return View(tweets);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
