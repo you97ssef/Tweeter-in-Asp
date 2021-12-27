@@ -100,20 +100,47 @@ public class UserController : Controller
         return View("Register", null);
     }
 
-    public IActionResult Tweets(int id)
+    public IActionResult Profile(int id)
     {
-        var user = new UserTweetsDto
-        {
-            Name = _context.Users.FirstOrDefault(u => u.Id == id).Fullname,
-            Tweets = _context.Tweets.OrderByDescending(t => t.Id).Where(t => t.AuthorId == id).Select(t => new TweetTextDateDto
-            {
-                Id = t.Id,
-                Text = t.Text,
-                Updated = t.Updated,
-                Likes = t.Likes.Count
-            }).ToList()
-        };
+        var userFromDb = _context.Users
+            .Where(u => u.Id == id).Include(u => u.Tweets)
+            .Select(u => new UserProfileDto{
+                Id = id,
+                Name = u.Fullname,
+                Follows = u.Followees.Count,
+                Followers = u.Followers.Count,
+                Tweets = u.Tweets.OrderByDescending(t => t.Id).Where(t => t.AuthorId == id).Select(t => new TweetTextDateDto
+                    {
+                        Id = t.Id,
+                        Text = t.Text,
+                        Updated = t.Updated,
+                        Likes = t.Likes.Count
+                    }).ToList()
+            }).SingleOrDefault();
 
-        return View(user);
+        return View(userFromDb);
+    }
+
+    public IActionResult Follow(int id)
+    {
+        var userId = (int)HttpContext.Session.GetInt32("UserId");
+
+        if (_context.Follows.FirstOrDefault(l => l.FolloweeId == id && l.FollowerId == userId) == null)
+        {
+            var follow = new Follow
+            {
+                FollowerId = userId,
+                FolloweeId = id
+            };
+
+            _context.Follows.Add(follow);
+
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("Profile", new
+        {
+            Id = id
+        });
     }
 }

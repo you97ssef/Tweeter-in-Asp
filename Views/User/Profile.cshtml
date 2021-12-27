@@ -1,10 +1,17 @@
-﻿@model Tweeter.Dtos.UserTweetsDto
+﻿@model Tweeter.Dtos.UserProfileDto
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">@Model.Name</h1>
+    <h6>
+        Follows: @Model.Followers - Followers: @Model.Follows
+    </h6>
+    @if (Context.Session.Get("Username") != null)
+    {
+        <a asp-controller="User" asp-route-id="@Model.Id" asp-action="Follow" class="btn btn-outline-success"> Follow </a>
+    }
 </div>
 
 @foreach (var item in Model.Tweets)
