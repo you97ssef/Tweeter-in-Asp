@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tweeter.Data;
 using Tweeter.Models;
+using Tweeter.Dtos;
 
 namespace Tweeter.Controllers;
 
@@ -20,7 +21,16 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        IEnumerable<Tweet>? tweets = _context.Tweets.Include(t => t.Author).ToList();
+        var tweets = _context.Tweets.OrderByDescending(t => t.Id).Select(t => 
+            new TweetDto
+            {
+                Id = t.Id,
+                Author = t.Author.Fullname,
+                AuthorId = t.AuthorId,
+                Text = t.Text,
+                Updated = t.Updated,
+                Likes = t.Likes.Count
+            }).ToList();
 
         return View(tweets);
     }

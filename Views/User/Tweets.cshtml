@@ -1,23 +1,32 @@
-﻿@model User
+﻿@model Tweeter.Dtos.UserTweetsDto
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">@Model.Fullname</h1>
+    <h1 class="display-4">@Model.Name</h1>
 </div>
 
-@{
-    foreach (var item in Model.Tweets)
-    {
-        <div class="card m-4">
-            <div class="card-body">
-                <p class="card-text">@item.Text</p>
+@foreach (var item in Model.Tweets)
+{
+    <div class="card m-4">
+        <div class="card-body">
+            <p class="card-text">
+                <a asp-controller="Tweet" asp-route-id="@item.Id" asp-action="Index" class="link-dark">@item.Text</a>
+            </p>
+        </div>
+        <div class="card-footer text-muted d-flex justify-content-between">
+            <div>
+                likes: @item.Likes
             </div>
-            <div class="card-footer text-muted text-center">
+            @if (Context.Session.Get("Username") != null)
+            {
+                <a asp-controller="Tweet" asp-route-id="@item.Id" asp-action="Like" class="btn btn-outline-primary"> I Like it!
+                    👍 </a>
+            }
+            <div>
                 @item.Updated
             </div>
         </div>
-
-    }
+    </div>
 }

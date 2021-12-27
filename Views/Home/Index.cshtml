@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Tweet>
+﻿@model IEnumerable<Tweeter.Dtos.TweetDto>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -7,17 +7,27 @@
     <h1 class="display-4">Welcome</h1>
 </div>
 
-@{
-    foreach (var item in Model)
-    {
-        <div class="card m-4">
-            <div class="card-body">
-                <p class="card-text">@item.Text</p>
+@foreach (var item in Model)
+{
+    <div class="card m-4">
+        <div class="card-body">
+            <p class="card-text">
+                <a asp-controller="Tweet" asp-route-id="@item.Id" asp-action="Index" class="link-dark">@item.Text</a>
+            </p>
+        </div>
+        <div class="card-footer text-muted d-flex justify-content-between">
+            <div>
+                likes: @item.Likes
             </div>
-            <div class="card-footer text-muted text-center">
-                @item.Updated - <a asp-controller="User" asp-route-id="@item.Author.Id" asp-action="Tweets" class="link-dark">@item.Author.Fullname</a>
+            @if (Context.Session.Get("Username") != null)
+            {
+                <a asp-controller="Tweet" asp-route-id="@item.Id" asp-action="Like" class="btn btn-outline-primary"> I Like it!
+                    👍 </a>
+            }
+            <div>
+                @item.Updated - <a asp-controller="User" asp-route-id="@item.AuthorId" asp-action="Tweets"
+                class="link-dark">@item.Author</a>
             </div>
         </div>
-
-    }
+    </div>
 }

@@ -1,0 +1,24 @@
+﻿@model Tweeter.Dtos.TweetDto
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="card m-4">
+    <div class="card-body">
+        <p class="card-text">@Model.Text</p>
+    </div>
+    <div class="card-footer text-muted d-flex justify-content-between">
+        <div>
+            likes: @Model.Likes
+        </div>
+        @if (Context.Session.Get("Username") != null)
+        {
+            <a asp-controller="Tweet" asp-route-id="@Model.Id" asp-action="Like" class="btn btn-outline-primary"> I Like it!
+                👍 </a>
+        }
+        <div>
+            @Model.Updated - <a asp-controller="User" asp-route-id="@Model.AuthorId" asp-action="Tweets"
+                class="link-dark">@Model.Author</a>
+        </div>
+    </div>
+</div>

@@ -21,5 +21,13 @@ public class DataContext : DbContext
         builder.Entity<User>()
             .HasIndex(u => u.Username)
             .IsUnique();
+
+        builder.Entity<Like>()
+            .HasIndex(l => new {l.TweetId , l.UserId})
+            .IsUnique();
+
+        builder.Entity<Follow>()
+            .HasIndex(f => new {f.FolloweeId , f.FollowerId})
+            .IsUnique();
     }
 }

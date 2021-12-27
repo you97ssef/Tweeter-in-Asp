@@ -1,9 +1,9 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Tweeter.Data;
 using Tweeter.Dtos;
 using Tweeter.Models;
 using Microsoft.EntityFrameworkCore;
+using Tweeter.Services;
 
 namespace Tweeter.Controllers;
 
@@ -29,6 +29,8 @@ public class UserController : Controller
 
             return View("Register", alert);
         }
+
+        user.Password = PasswordService.Hash(user.Password);
 
         _context.Users.Add(user);
 
@@ -62,7 +64,7 @@ public class UserController : Controller
             return View("Login", alert);
         }
 
-        if (userFromDb.Password == user.Password)
+        if (PasswordService.Verify(user.Password, userFromDb.Password))
         {
             alert.Color = "success";
             alert.Message = "Connected succefully";
@@ -100,7 +102,17 @@ public class UserController : Controller
 
     public IActionResult Tweets(int id)
     {
-        var user = _context.Users.Include(u => u.Tweets).First(u => u.Id == id);
+        var user = new UserTweetsDto
+        {
+            Name = _context.Users.FirstOrDefault(u => u.Id == id).Fullname,
+            Tweets = _context.Tweets.OrderByDescending(t => t.Id).Where(t => t.AuthorId == id).Select(t => new TweetTextDateDto
+            {
+                Id = t.Id,
+                Text = t.Text,
+                Updated = t.Updated,
+                Likes = t.Likes.Count
+            }).ToList()
+        };
 
         return View(user);
     }
