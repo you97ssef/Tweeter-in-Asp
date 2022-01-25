@@ -13,15 +13,15 @@ public class HomeController : Controller
 
     private readonly DataContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, DataContext context)
     {
-        _context = new DataContext();
+        _context = context;
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        var tweets = _context.Tweets.OrderByDescending(t => t.Id).Select(t => 
+        var tweets = _context.Tweets.OrderByDescending(t => t.Id).Select(t =>
             new TweetDto
             {
                 Id = t.Id,

@@ -10,9 +10,9 @@ public class TweetController : Controller
 {
     private readonly DataContext _context;
 
-    public TweetController()
+    public TweetController(DataContext context)
     {
-        _context = new DataContext();
+        _context = context;
     }
 
     public IActionResult New()

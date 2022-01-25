@@ -11,9 +11,9 @@ public class UserController : Controller
 {
     private readonly DataContext _context;
 
-    public UserController()
+    public UserController(DataContext context)
     {
-        _context = new DataContext();
+        _context = context;
     }
 
     [HttpPost]
@@ -104,18 +104,19 @@ public class UserController : Controller
     {
         var userFromDb = _context.Users
             .Where(u => u.Id == id).Include(u => u.Tweets)
-            .Select(u => new UserProfileDto{
+            .Select(u => new UserProfileDto
+            {
                 Id = id,
                 Name = u.Fullname,
                 Follows = u.Followees.Count,
                 Followers = u.Followers.Count,
                 Tweets = u.Tweets.OrderByDescending(t => t.Id).Where(t => t.AuthorId == id).Select(t => new TweetTextDateDto
-                    {
-                        Id = t.Id,
-                        Text = t.Text,
-                        Updated = t.Updated,
-                        Likes = t.Likes.Count
-                    }).ToList()
+                {
+                    Id = t.Id,
+                    Text = t.Text,
+                    Updated = t.Updated,
+                    Likes = t.Likes.Count
+                }).ToList()
             }).SingleOrDefault();
 
         return View(userFromDb);

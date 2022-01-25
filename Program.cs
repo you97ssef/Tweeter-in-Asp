@@ -1,9 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Tweeter.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDistributedMemoryCache();
+
+// Injecting database
+builder.Services.AddDbContext<DataContext>(option => option.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddSession(options =>
 {
