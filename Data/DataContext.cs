@@ -5,14 +5,15 @@ namespace Tweeter.Data;
 
 public class DataContext : DbContext
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<Tweet> Tweets { get; set; }
-    public DbSet<Like> Likes { get; set; }
-    public DbSet<Follow> Follows { get; set; }
-
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
     }
+
+    public DbSet<User>? Users { get; set; }
+    public DbSet<Tweet>? Tweets { get; set; }
+    public DbSet<Like>? Likes { get; set; }
+    public DbSet<Follow>? Follows { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

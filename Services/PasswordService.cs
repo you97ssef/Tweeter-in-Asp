@@ -23,8 +23,7 @@ public class PasswordService
     public static string Hash(string password, int iterations)
     {
         // Create salt
-        byte[] salt;
-        new RNGCryptoServiceProvider().GetBytes(salt = new byte[SaltSize]);
+        byte[] salt = new byte[SaltSize];
 
         // Create hash
         var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);

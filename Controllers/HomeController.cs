@@ -21,15 +21,15 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var tweets = _context.Tweets.OrderByDescending(t => t.Id).Select(t =>
+        var tweets = _context.Tweets!.OrderByDescending(t => t.Id).Select(t =>
             new TweetDto
             {
                 Id = t.Id,
-                Author = t.Author.Fullname,
+                Author = t.Author!.Fullname,
                 AuthorId = t.AuthorId,
                 Text = t.Text,
                 Updated = t.Updated,
-                Likes = t.Likes.Count
+                Likes = t.Likes!.Count
             }).ToList();
 
         return View(tweets);
